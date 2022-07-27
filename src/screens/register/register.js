@@ -44,7 +44,7 @@ function Register(props) {
     }
   };
 
-  const handleRegister = async () => {
+  const handleRegister = () => {
     props.registerUser(userInfo);
   };
   useEffect(() => {
