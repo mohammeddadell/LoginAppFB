@@ -11,11 +11,18 @@ import "./src/firebase/config";
 import AuthProvider, { useAuth } from "./src/contexts/authContext";
 import LangProvider, { useLang } from "./src/contexts/langContext";
 import CustomSidebarMenu from "./src/components/side_bar/CustomSidebarMenu";
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import authReducer from "./src/redux/reducers/authReducer";
+
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+const store = createStoreWithMiddleware(authReducer);
+
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const Navigator = () => {
   const [user] = useAuth();
-  const [lang] = useLang();
 
   if (user) {
     return (
@@ -46,11 +53,13 @@ const Navigator = () => {
 export default function App() {
   return (
     <NavigationContainer>
-      <AuthProvider>
-        <LangProvider>
-          <Navigator />
-        </LangProvider>
-      </AuthProvider>
+      <Provider store={store}>
+        <AuthProvider>
+          <LangProvider>
+            <Navigator />
+          </LangProvider>
+        </AuthProvider>
+      </Provider>
     </NavigationContainer>
   );
 }

@@ -7,39 +7,29 @@ import {
   Text,
 } from "@react-native-material/core";
 import { useState, useEffect } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import "../../firebase/config";
 import { useAuth } from "../../contexts/authContext";
 import { styles } from "./login_styles";
 import GoogleLogin from "../../components/google_login";
+import { connect } from "react-redux";
+import { signin } from "../../redux/actions/authActions";
 
-export default function Login({ navigation }) {
+function Login(props) {
   const [userInput, setUserInput] = useState({ email: "", password: "" });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [user, setUser] = useAuth();
-  const auth = getAuth();
-
-  const handleLogin = async () => {
-    setIsLoading(true);
-    try {
-      await signInWithEmailAndPassword(
-        auth,
-        userInput.email,
-        userInput.password
-      ).then((cred) => {
-        console.log(cred.user);
-        setUser(cred.user);
-      });
-      setIsLoading(false);
-    } catch (error) {
-      alert(error);
-      setError(error);
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleLogin = () => {
+    props.signin(userInput);
   };
+  useEffect(() => {
+    if (props.user.errorMessage && props.user.user == null) {
+      alert(props.user.errorMessage);
+    }
+  }, [props.user.errorMessage]);
+
+  useEffect(() => {
+    if (props.user.user) {
+      setUser(props.user.user);
+    }
+  }, [props.user.user]);
 
   return (
     <View style={{ paddingTop: 40 }}>
@@ -77,19 +67,24 @@ export default function Login({ navigation }) {
             <Button
               onPress={handleLogin}
               title="Login"
-              loading={isLoading}
+              loading={props.user.loading}
               color="#a80707"
             />
           </HStack>
           <Button
             title="Or Register from here"
             variant="text"
-            onPress={() => navigation.navigate("Register")}
+            onPress={() => props.navigation.navigate("Register")}
             compact
-            color="black"
+            color="#000000"
           />
         </VStack>
       </VStack>
     </View>
   );
 }
+
+const mapStateToProps = (state) => {
+  return { user: state };
+};
+export default connect(mapStateToProps, { signin })(Login);

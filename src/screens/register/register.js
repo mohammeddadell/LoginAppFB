@@ -7,20 +7,16 @@ import {
   Text,
   Avatar,
 } from "@react-native-material/core";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import PhoneInput from "react-native-phone-number-input";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
-import { getDatabase, ref, onValue, set } from "firebase/database";
 import "../../firebase/config";
 import { useAuth } from "../../contexts/authContext";
 import { styles } from "./register_styles";
 import * as ImagePicker from "expo-image-picker";
+import { registerUser } from "../../redux/actions/authActions";
+import { connect } from "react-redux";
 
-export default function Register({ navigation }) {
+function Register(props) {
   const [userInfo, setUserInfo] = useState({
     fullName: "",
     phoneNumber: "",
@@ -28,12 +24,9 @@ export default function Register({ navigation }) {
     password: "",
     image: null,
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [value, setValue] = useState("");
   const phoneInput = useRef();
   const [user, setUser] = useAuth();
-  const auth = getAuth();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -53,34 +46,18 @@ export default function Register({ navigation }) {
   };
 
   const handleRegister = async () => {
-    setIsLoading(true);
-    try {
-      await createUserWithEmailAndPassword(
-        auth,
-        userInfo.email,
-        userInfo.password
-      ).then((cred) => {
-        updateProfile(auth.currentUser, {
-          displayName: userInfo.fullName,
-          photoURL: userInfo.image,
-        }).then((res) => {
-          const db = getDatabase();
-          const refrence = ref(db, "users/" + cred.user.uid);
-          set(refrence, {
-            phoneNumber: userInfo.phoneNumber,
-          });
-          setUser(auth.currentUser);
-          console.log("result", res);
-        });
-      });
-    } catch (error) {
-      console.log(error);
-      alert(error);
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
+    props.registerUser(userInfo);
   };
+  useEffect(() => {
+    if (props.user.errorMessage && props.user.user == null) {
+      alert(props.user.errorMessage);
+    }
+  }, [props.user.errorMessage]);
+  useEffect(() => {
+    if (props.user.user) {
+      setUser(props.user.user);
+    }
+  }, [props.user.user]);
   return (
     <View style={{ paddingTop: 40 }}>
       <VStack spacing={6} style={{ padding: 16 }}>
@@ -157,14 +134,14 @@ export default function Register({ navigation }) {
             <Button
               title="Have an account? Login"
               variant="text"
-              onPress={() => navigation.navigate("Login")}
+              onPress={() => props.navigation.navigate("Login")}
               compact
-              color="black"
+              color="#000000"
             />
             <Button
               onPress={handleRegister}
               title="Register"
-              loading={isLoading}
+              loading={props.user.loading}
               color="#a80707"
             />
           </HStack>
@@ -173,3 +150,9 @@ export default function Register({ navigation }) {
     </View>
   );
 }
+const mapStateToProps = (state) => {
+  return {
+    user: state,
+  };
+};
+export default connect(mapStateToProps, { registerUser })(Register);

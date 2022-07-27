@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, Alert } from "react-native";
 import { Avatar, Text, Button, HStack } from "@react-native-material/core";
-import { signOut, getAuth } from "firebase/auth";
 import { useAuth } from "../../contexts/authContext";
 import { useLang } from "../../contexts/langContext";
 import { styles } from "./sideBar_styles";
 import { languages } from "../../contexts/langContext";
+import { connect } from "react-redux";
+import { signout } from "../../redux/actions/authActions";
 
-export default function CustomSidebarMenu(props) {
+function CustomSidebarMenu(props) {
   const [user, setUser] = useAuth();
   const [lang, setLang] = useLang();
-  const auth = getAuth();
+
   const handleSignOut = () => {
     Alert.alert(languages[lang].signoutConfirmMsg, "", [
       {
@@ -21,13 +22,17 @@ export default function CustomSidebarMenu(props) {
       {
         text: languages[lang].signOut,
         onPress: () => {
-          signOut(auth).then(() => {
-            setUser(null);
-          });
+          props.signout();
         },
       },
     ]);
   };
+
+  useEffect(() => {
+    if (props.user.user == null) {
+      setUser(null);
+    }
+  }, [props.user.user]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Avatar style={styles.itemAlignments} image={{ uri: user.photoURL }} />
@@ -55,3 +60,7 @@ export default function CustomSidebarMenu(props) {
     </SafeAreaView>
   );
 }
+const mapStateToProps = (state) => {
+  return { user: state };
+};
+export default connect(mapStateToProps, { signout })(CustomSidebarMenu);

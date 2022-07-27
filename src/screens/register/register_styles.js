@@ -12,6 +12,6 @@ export const styles = StyleSheet.create({
   },
   textContainerStyle: { backgroundColor: "white" },
   textInput: { paddingVertical: 5 },
-  color: "black",
+  color: "#000000",
   imageBtn: { height: 40, padding: 2, margin: 6 },
 });

@@ -1,0 +1,5 @@
+export const REQUEST_IN_PROGRESS = "REQUEST_IN_PROGRESS";
+export const REGULAR_LOGIN = "REGULAR_SIGNIN";
+export const REGISTER = "REGISTER";
+export const REQUEST_ERROR = "REQUEST_ERROR";
+export const LOGOUT = "LOGOUT";

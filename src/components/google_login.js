@@ -21,7 +21,6 @@ export default function GoogleLogin() {
 
   useEffect(() => {
     if (response?.type === "success") {
-      setIsLoading(true);
       const { id_token } = response.params;
 
       const auth = getAuth();
@@ -39,6 +38,7 @@ export default function GoogleLogin() {
       disabled={!request}
       title="Login with Google"
       onPress={() => {
+        setIsLoading(true);
         promptAsync();
       }}
       color="white"
