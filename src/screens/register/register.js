@@ -9,7 +9,6 @@ import {
 } from "@react-native-material/core";
 import { useState, useRef, useEffect } from "react";
 import PhoneInput from "react-native-phone-number-input";
-import "../../firebase/config";
 import { useAuth } from "../../contexts/authContext";
 import { styles } from "./register_styles";
 import * as ImagePicker from "expo-image-picker";
