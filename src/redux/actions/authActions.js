@@ -12,7 +12,15 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import {
+  getStorage,
+  ref as strgRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import uuid from "uuid";
 import { getDatabase, ref, set } from "firebase/database";
+
 import "../../firebase/config";
 
 export const regularLogin = (loggedUser) => {
@@ -72,16 +80,38 @@ export const registerUser = (userInfo) => {
         auth,
         userInfo.email,
         userInfo.password
-      ).then((cred) => {
+      ).then(async (cred) => {
+        let imgURL = "";
+        if (userInfo.image) {
+          const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+              resolve(xhr.response);
+            };
+            xhr.onerror = function (e) {
+              reject(new TypeError("Network request failed"));
+            };
+            xhr.responseType = "blob";
+            xhr.open("GET", userInfo.image.uri, true);
+            xhr.send(null);
+          });
+          const fileRef = strgRef(getStorage(), uuid.v4());
+          const result = await uploadBytes(fileRef, blob);
+          blob.close();
+          imgURL = await getDownloadURL(fileRef);
+          console.log(imgURL);
+        }
+
         updateProfile(auth.currentUser, {
           displayName: userInfo.fullName,
-          photoURL: userInfo.image,
+          photoURL: imgURL,
         }).then((res) => {
           const db = getDatabase();
           const refrence = ref(db, "users/" + cred.user.uid);
           set(refrence, {
             phoneNumber: userInfo.phoneNumber,
           });
+          refrence.putFile;
           dispatch(register(auth.currentUser));
         });
       });

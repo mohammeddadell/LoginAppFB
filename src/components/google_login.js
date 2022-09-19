@@ -25,11 +25,16 @@ export default function GoogleLogin() {
 
       const auth = getAuth();
       const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential).then((cred) => {
-        console.log(cred.user);
-        setUser(cred.user);
-        setIsLoading(false);
-      });
+      signInWithCredential(auth, credential)
+        .then((cred) => {
+          console.log(cred.user);
+          setUser(cred.user);
+          setIsLoading(false);
+        })
+        .catch((erro) => {
+          console.log(error);
+          setIsLoading(false);
+        });
     }
   }, [response]);
   return (

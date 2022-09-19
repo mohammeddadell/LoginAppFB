@@ -32,7 +32,7 @@ function Login(props) {
   }, [props.user.user]);
 
   return (
-    <View style={{ paddingTop: 40 }}>
+    <View style={styles.container}>
       <VStack spacing={6} style={{ padding: 16 }}>
         <VStack spacing={1}>
           <Text variant="h6">Login</Text>
@@ -62,22 +62,24 @@ function Login(props) {
               });
             }}
           />
-          <HStack justify="between">
-            <GoogleLogin />
+          <View>
+            <View style={styles.loginButtons}>
+              <GoogleLogin />
+              <Button
+                onPress={handleLogin}
+                title="Login"
+                loading={props.user.loading}
+                color="#a80707"
+              />
+            </View>
             <Button
-              onPress={handleLogin}
-              title="Login"
-              loading={props.user.loading}
-              color="#a80707"
+              title="Or Register from here"
+              variant="text"
+              onPress={() => props.navigation.navigate("Register")}
+              compact
+              color="#000000"
             />
-          </HStack>
-          <Button
-            title="Or Register from here"
-            variant="text"
-            onPress={() => props.navigation.navigate("Register")}
-            compact
-            color="#000000"
-          />
+          </View>
         </VStack>
       </VStack>
     </View>

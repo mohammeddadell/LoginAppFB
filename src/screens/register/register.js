@@ -35,11 +35,9 @@ function Register(props) {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setUserInfo((prvUser) => {
-        return { ...prvUser, image: result.uri };
+        return { ...prvUser, image: result };
       });
     }
   };
@@ -58,7 +56,7 @@ function Register(props) {
     }
   }, [props.user.user]);
   return (
-    <View style={{ paddingTop: 40 }}>
+    <View style={styles.container}>
       <VStack spacing={6} style={{ padding: 16 }}>
         <VStack spacing={1}>
           <Text variant="h6">Register</Text>
@@ -77,8 +75,8 @@ function Register(props) {
             }}
           />
           <PhoneInput
-            containerStyle={styles.containerStyle}
-            textContainerStyle={styles.textContainerStyle}
+            containerStyle={styles.phoneContainerStyle}
+            textContainerStyle={styles.phoneTextContainerStyle}
             ref={phoneInput}
             defaultValue={value}
             defaultCode="EG"
@@ -119,7 +117,7 @@ function Register(props) {
             }}
           />
           <HStack spacing={8}>
-            {userInfo.image && <Avatar image={{ uri: userInfo.image }} />}
+            {userInfo.image && <Avatar image={{ uri: userInfo.image.uri }} />}
             <Button
               variant="outlined"
               title="Pick an avatar"
@@ -129,7 +127,7 @@ function Register(props) {
             />
           </HStack>
 
-          <HStack justify="between">
+          <View style={styles.buttonsContainer}>
             <Button
               title="Have an account? Login"
               variant="text"
@@ -143,7 +141,7 @@ function Register(props) {
               loading={props.user.loading}
               color="#a80707"
             />
-          </HStack>
+          </View>
         </VStack>
       </VStack>
     </View>

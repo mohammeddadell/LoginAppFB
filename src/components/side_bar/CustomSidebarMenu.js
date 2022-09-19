@@ -29,6 +29,7 @@ function CustomSidebarMenu(props) {
   };
 
   useEffect(() => {
+    console.log(user);
     if (props.user.user == null) {
       setUser(null);
     }
@@ -49,6 +50,17 @@ function CustomSidebarMenu(props) {
           }}
         />
       </HStack>
+      <Text
+        style={styles.publicRoom}
+        onPress={() => {
+          props.navigation.navigate("Chat");
+        }}
+      >
+        Public chat room
+      </Text>
+      <Text style={styles.publicRoom} onPress={() => {}}>
+        Chat with another user
+      </Text>
 
       <Button
         title={languages[lang].signOut}

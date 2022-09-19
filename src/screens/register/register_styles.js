@@ -1,7 +1,11 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  containerStyle: {
+  container: {
+    paddingTop: 40,
+    flex: 1,
+  },
+  phoneContainerStyle: {
     borderColor: "grey",
     borderWidth: 1,
     borderRadius: 5,
@@ -10,8 +14,12 @@ export const styles = StyleSheet.create({
     paddingBottom: 3,
     paddingTop: 2,
   },
-  textContainerStyle: { backgroundColor: "white" },
+  phoneTextContainerStyle: { backgroundColor: "white" },
   textInput: { paddingVertical: 5 },
   color: "#000000",
   imageBtn: { height: 40, padding: 2, margin: 6 },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
 });
