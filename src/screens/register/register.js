@@ -7,7 +7,7 @@ import {
   Text,
   Avatar,
 } from "@react-native-material/core";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import PhoneInput from "react-native-phone-number-input";
 import { useAuth } from "../../contexts/authContext";
 import { styles } from "./register_styles";
@@ -26,8 +26,9 @@ function Register(props) {
   const [value, setValue] = useState("");
   const phoneInput = useRef();
   const [user, setUser] = useAuth();
+  const memoStyles = useMemo(() => styles, [styles]);
 
-  const pickImage = async () => {
+  const pickImage = useCallback(async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -40,11 +41,11 @@ function Register(props) {
         return { ...prvUser, image: result };
       });
     }
-  };
+  }, [userInfo.image]);
 
-  const handleRegister = () => {
+  const handleRegister = useCallback(() => {
     props.registerUser(userInfo);
-  };
+  }, [userInfo]);
   useEffect(() => {
     if (props.user.errorMessage && props.user.user == null) {
       alert(props.user.errorMessage);
@@ -56,16 +57,16 @@ function Register(props) {
     }
   }, [props.user.user]);
   return (
-    <View style={styles.container}>
-      <VStack spacing={6} style={{ padding: 16 }}>
+    <View style={memoStyles.container}>
+      <VStack spacing={6} style={memoStyles.vstackPadding}>
         <VStack spacing={1}>
           <Text variant="h6">Register</Text>
           <Text variant="subtitle1">Create an account</Text>
         </VStack>
         <VStack spacing={2}>
           <TextInput
-            style={styles.textInput}
-            color={styles.color}
+            style={memoStyles.textInput}
+            color={memoStyles.color}
             variant="outlined"
             placeholder="Full Name"
             onChangeText={(text) => {
@@ -75,8 +76,8 @@ function Register(props) {
             }}
           />
           <PhoneInput
-            containerStyle={styles.phoneContainerStyle}
-            textContainerStyle={styles.phoneTextContainerStyle}
+            containerStyle={memoStyles.phoneContainerStyle}
+            textContainerStyle={stmemoStylesyles.phoneTextContainerStyle}
             ref={phoneInput}
             defaultValue={value}
             defaultCode="EG"
@@ -94,8 +95,8 @@ function Register(props) {
             autoFocus={false}
           />
           <TextInput
-            color={styles.color}
-            style={styles.textInput}
+            color={memoStyles.color}
+            style={memoStyles.textInput}
             variant="outlined"
             placeholder="Email"
             onChangeText={(text) => {
@@ -105,8 +106,8 @@ function Register(props) {
             }}
           />
           <TextInput
-            color={styles.color}
-            style={styles.textInput}
+            color={memoStyles.color}
+            style={memoStyles.textInput}
             variant="outlined"
             secureTextEntry={true}
             placeholder="Password"
@@ -123,11 +124,11 @@ function Register(props) {
               title="Pick an avatar"
               color="#a80707"
               onPress={pickImage}
-              style={styles.imageBtn}
+              style={memoStyles.imageBtn}
             />
           </HStack>
 
-          <View style={styles.buttonsContainer}>
+          <View style={memoStyles.buttonsContainer}>
             <Button
               title="Have an account? Login"
               variant="text"

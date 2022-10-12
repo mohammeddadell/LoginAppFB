@@ -41,4 +41,17 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingRight: 15,
   },
+  displayNameTxt: {
+    fontSize: 12,
+  },
+  msgTxt: {
+    color: "white",
+  },
+  msgImg: {
+    height: 100,
+    width: 100,
+  },
+  devider: {
+    marginBottom: 10,
+  },
 });

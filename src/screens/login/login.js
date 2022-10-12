@@ -6,7 +6,7 @@ import {
   HStack,
   Text,
 } from "@react-native-material/core";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "../../contexts/authContext";
 import { styles } from "./login_styles";
 import GoogleLogin from "../../components/google_login";
@@ -16,9 +16,10 @@ import { signin } from "../../redux/actions/authActions";
 function Login(props) {
   const [userInput, setUserInput] = useState({ email: "", password: "" });
   const [user, setUser] = useAuth();
-  const handleLogin = () => {
+  const memoStyles = useMemo(() => styles, [styles]);
+  const handleLogin = useCallback(() => {
     props.signin(userInput);
-  };
+  }, [userInput]);
   useEffect(() => {
     if (props.user.errorMessage && props.user.user == null) {
       alert(props.user.errorMessage);
@@ -32,16 +33,16 @@ function Login(props) {
   }, [props.user.user]);
 
   return (
-    <View style={styles.container}>
-      <VStack spacing={6} style={{ padding: 16 }}>
+    <View style={memoStyles.container}>
+      <VStack spacing={6} style={memoStyles.vstackPadding}>
         <VStack spacing={1}>
           <Text variant="h6">Login</Text>
           <Text variant="subtitle1">Login to your account</Text>
         </VStack>
         <VStack spacing={2}>
           <TextInput
-            style={styles.textInput}
-            color={styles.color}
+            style={memoStyles.textInput}
+            color={memoStyles.color}
             variant="outlined"
             placeholder="Email"
             onChangeText={(text) => {
@@ -51,8 +52,8 @@ function Login(props) {
             }}
           />
           <TextInput
-            style={styles.textInput}
-            color={styles.color}
+            style={memoStyles.textInput}
+            color={memoStyles.color}
             variant="outlined"
             secureTextEntry={true}
             placeholder="Password"
@@ -63,7 +64,7 @@ function Login(props) {
             }}
           />
           <View>
-            <View style={styles.loginButtons}>
+            <View style={memoStyles.loginButtons}>
               <GoogleLogin />
               <Button
                 onPress={handleLogin}

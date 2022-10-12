@@ -41,7 +41,8 @@
     "redux-thunk": "^2.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "@welldone-software/why-did-you-render": "^7.0.1"
   },
   "private": true
 }

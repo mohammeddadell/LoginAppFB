@@ -11,4 +11,6 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   icons: { padding: 5, paddingBottom: 8 },
+  avatar: { margin: 5 },
+  txtInputCont: { height: 45 },
 });

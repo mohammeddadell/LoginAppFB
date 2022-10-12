@@ -13,4 +13,5 @@ export const styles = StyleSheet.create({
     paddingRight: 4,
     paddingBottom: 5,
   },
+  keyboardAvoiding: { flex: 1, paddingTop: 50 },
 });

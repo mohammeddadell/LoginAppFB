@@ -8,23 +8,29 @@ import {
 import { styles } from "./chat_styles";
 import ChatMessages from "../../components/chat/messages/messages";
 import ChatTextBox from "../../components/chat/text_box/text_box";
+import { memo } from "react";
+import { useMemo } from "react";
 
 function Chat(props) {
+  const MessagesMemoized = memo(ChatMessages);
+  const ChatBoxMemoized = memo(ChatTextBox);
+  const memoStyles = useMemo(() => styles, [styles]);
+  const device = useMemo(() => (Platform.OS === "ios" ? "padding" : "height"));
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={device}
       enabled={true}
-      style={{ flex: 1, paddingTop: 50 }}
+      style={memoStyles.keyboardAvoiding}
       keyboardVerticalOffset={73}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
-          <View style={styles.msgs}>
-            <ChatMessages />
+        <View style={memoStyles.container}>
+          <View style={memoStyles.msgs}>
+            <MessagesMemoized />
           </View>
           <View>
-            <View style={styles.chatTxtBox}>
-              <ChatTextBox />
+            <View style={memoStyles.chatTxtBox}>
+              <ChatBoxMemoized />
             </View>
           </View>
         </View>
@@ -32,5 +38,5 @@ function Chat(props) {
     </KeyboardAvoidingView>
   );
 }
-
+Chat.whyDidYouRender = true;
 export default Chat;

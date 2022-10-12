@@ -1,5 +1,5 @@
+import "./wdyr";
 import "react-native-gesture-handler";
-import { Alert, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -7,16 +7,14 @@ import Login from "./src/screens/login/login";
 import Register from "./src/screens/register/register";
 import Home from "./src/screens/home/home";
 import Chat from "./src/screens/chat/chat";
-import Splash from "./src/screens/splash/splash";
 import "./src/firebase/config";
 import AuthProvider, { useAuth } from "./src/contexts/authContext";
-import LangProvider, { useLang } from "./src/contexts/langContext";
+import LangProvider from "./src/contexts/langContext";
 import CustomSidebarMenu from "./src/components/side_bar/CustomSidebarMenu";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import authReducer from "./src/redux/reducers/authReducer";
-import { Feather } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
 
@@ -31,7 +29,7 @@ const Navigator = () => {
   if (user) {
     return (
       <Drawer.Navigator
-        drawerContentOptions={{
+        screenOptions={{
           activeTintColor: "#e91e63",
           itemStyle: { marginVertical: 5 },
         }}
@@ -41,9 +39,6 @@ const Navigator = () => {
           name="Home"
           options={{
             drawerLabel: "Home Page",
-            drawerIcon: (config) => (
-              <Feather name="menu" size={24} color="black" />
-            ),
           }}
           component={Home}
         />
@@ -51,9 +46,6 @@ const Navigator = () => {
           name="Chat"
           options={{
             drawerLabel: "Chat",
-            drawerIcon: (config) => (
-              <Feather name="menu" size={24} color="black" />
-            ),
           }}
           component={Chat}
         />
@@ -103,12 +95,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
